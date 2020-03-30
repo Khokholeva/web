@@ -1,24 +1,25 @@
 import datetime
 import sqlalchemy
 from sqlalchemy import orm
-
 from .db_session import SqlAlchemyBase
 
 
-class News(SqlAlchemyBase):
-    __tablename__ = 'news'
+class Jobs(SqlAlchemyBase):
+    __tablename__ = 'Jobs'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
-    title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    content = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    created_date = sqlalchemy.Column(sqlalchemy.DateTime,
+    job = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    work_size = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    collaborators = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    start_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
-    is_private = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    end_date = sqlalchemy.Column(sqlalchemy.DateTime,
+                                     default=datetime.datetime.now)
+    is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
 
-    user_id = sqlalchemy.Column(sqlalchemy.Integer,
+    leader_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
-    user = orm.relation('User')
+    team_leader = orm.relation('users')
 
-    def __repr__(self):
-        return "<News> {}\n{}\nАвтор: {}".format(self.title, self.content, self.user.name)
+

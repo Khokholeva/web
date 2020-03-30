@@ -1,4 +1,3 @@
-from flask import Flask, render_template
 from data import db_session, __all_models
 from flask import Flask, url_for, request, render_template, redirect
 from flask_wtf import FlaskForm
@@ -7,7 +6,7 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
 User = __all_models.users.User
-News = __all_models.news.News
+News = __all_models.jobs.Jobs
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -23,8 +22,9 @@ class RegisterForm(FlaskForm):
 
 
 def main():
-    db_session.global_init("db/blogs.sqlite")
+    db_session.global_init("db/mars.sqlite")
     session = db_session.create_session()
+
     app.run()
 
 
