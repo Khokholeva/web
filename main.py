@@ -13,11 +13,15 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 class RegisterForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
-    name = StringField('Имя пользователя', validators=[DataRequired()])
-    about = TextAreaField("Немного о себе")
+    email = EmailField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_again = PasswordField('Repeat password', validators=[DataRequired()])
+    surname = StringField('Surname', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    age = StringField("Age")
+    position = StringField("Position")
+    speciality = StringField("Speciality")
+    address = StringField("Address")
     submit = SubmitField('Войти')
 
 
@@ -49,15 +53,25 @@ def reqister():
                                    form=form,
                                    message="Такой пользователь уже есть")
         user = User(
-            name=form.name.data,
             email=form.email.data,
-            about=form.about.data
+            hashed_password=hash(form.password.data),
+            name=form.name.data,
+            surname=form.surname.data,
+            age=int(form.age.data),
+            position=form.position.data,
+            speciality=form.speciality.data,
+            address=form.address.data
         )
         user.set_password(form.password.data)
         session.add(user)
         session.commit()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/login')
+def login():
+    return "colonist registered"
 
 
 if __name__ == '__main__':
