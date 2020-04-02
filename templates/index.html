@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 align="center">Главная страница</h1>
-
+<h1 align="center">Works log</h1>
+{% for elem in jobs %}
+<h3>Action # {{elem.id}}</h3>
+<table>
+    <tr>
+        <th align="center" bgcolor="#cccccc">Title of activity</th>
+        <th align="center" bgcolor="#cccccc">Team leader</th>
+        <th align="center" bgcolor="#cccccc">Duration</th>
+        <th align="center" bgcolor="#cccccc">List of collaborators</th>
+        <th align="center" bgcolor="#cccccc">Is finished</th>
+    </tr>
+    <tr>
+        <th align="center" bgcolor="#ccccff">{{elem.job}}</th>
+        <th align="center" bgcolor="#ccccff">{{elem.leader.surname}} {{elem.leader.name}}</th>
+        <th align="center" bgcolor="#ccccff">{{elem.work_size}}</th>
+        <th align="center" bgcolor="#ccccff">{{elem.collaborators}}</th>
+        {% if elem.is_finished %}
+        <th align="center" bgcolor="#aaddaa">Is finished</th>
+        {% else %}
+        <th align="center" bgcolor="#ddaaaa">Is not finished</th>
+        {% endif %}
+    </tr>
+</table>
+{% endfor %}
 {% endblock %}

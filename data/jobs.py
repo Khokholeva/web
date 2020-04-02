@@ -23,3 +23,6 @@ class Jobs(SqlAlchemyBase):
     team_leader = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("users.id"))
     leader = orm.relation('User')
+
+    def __repr__(self):
+        return "<Job> {} {}".format(self.id, self.job)
