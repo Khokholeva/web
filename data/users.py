@@ -3,9 +3,10 @@ import sqlalchemy
 from .db_session import SqlAlchemyBase
 import sqlalchemy.orm as orm
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 
-class User(SqlAlchemyBase):
+class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer,
@@ -23,7 +24,7 @@ class User(SqlAlchemyBase):
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
     jobs = orm.relation("Jobs", back_populates='leader')
-    departments = orm.relation("departments", back_populates='chief_relate')
+    departments = orm.relation("Departments", back_populates='chief_relate')
 
     def __repr__(self):
         return "<Colonist> {} {} {}".format(self.id, self.name, self.email)
