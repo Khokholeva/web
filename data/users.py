@@ -23,6 +23,7 @@ class User(SqlAlchemyBase):
     modified_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                       default=datetime.datetime.now)
     jobs = orm.relation("Jobs", back_populates='leader')
+    departments = orm.relation("departments", back_populates='chief_relate')
 
     def __repr__(self):
         return "<Colonist> {} {} {}".format(self.id, self.name, self.email)

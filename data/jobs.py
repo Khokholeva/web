@@ -16,8 +16,7 @@ class Jobs(SqlAlchemyBase):
                                      default=datetime.datetime.now)
     end_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
-    collaborators = sqlalchemy.Column(sqlalchemy.String,
-                                     default=datetime.datetime.now)
+    collaborators = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
 
     team_leader = sqlalchemy.Column(sqlalchemy.Integer,
