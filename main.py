@@ -1,10 +1,11 @@
 from data import db_session, __all_models
-from flask import Flask, url_for, request, render_template, redirect
+from flask import Flask, url_for, request, render_template, redirect, make_response, jsonify
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+import jobs_api
 
 User = __all_models.users.User
 Jobs = __all_models.jobs.Jobs
@@ -27,7 +28,7 @@ class RegisterForm(FlaskForm):
     password_again = PasswordField('Repeat password', validators=[DataRequired()])
     surname = StringField('Surname', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
-    age = StringField("Age")
+    age = IntegerField("Age")
     position = StringField("Position")
     speciality = StringField("Speciality")
     address = StringField("Address")
@@ -41,8 +42,20 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Enter')
 
 
+class JobForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    work_size = IntegerField("Work size")
+    start_date = StringField('Start date')
+    end_date = StringField('End date')
+    team_leader = IntegerField("Team leader", validators=[DataRequired()])
+    collaborators = StringField('Collaborators')
+    is_finished = BooleanField('Is finished')
+    submit = SubmitField('Submit')
+
+
 def main():
     db_session.global_init("db/Mars.sqlite")
+    app.register_blueprint(jobs_api.blueprint)
     app.run()
 
 
@@ -107,6 +120,33 @@ def login():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/add_job', methods=['GET', 'POST'])
+@login_required
+def add_job():
+    form = JobForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        job = Jobs()
+        job.title = form.title.data
+        job.work_size = form.work_size.data
+        job.start_date = form.start_date.data
+        job.end_date = form.end_date.data
+        job.team_leader = form.team_leader.data
+        job.collaborators = form.collaborators.data
+        job.is_finished = form.is_finished.data
+        current_user.jobs.append(job)
+        session.merge(current_user)
+        session.commit()
+        return redirect('/')
+    return render_template('add_job.html', title='Add job',
+                           form=form)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 if __name__ == '__main__':
