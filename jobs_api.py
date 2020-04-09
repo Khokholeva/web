@@ -18,7 +18,7 @@ def get_jobs():
             'jobs':
                 [item.to_dict(only=('id', 'job', 'work_size',
                                     'start_date', 'end_date',
-                                    'collaborators',  'is_finished',
+                                    'collaborators', 'is_finished',
                                     'team_leader', 'leader.name', 'leader.surname'))
                  for item in jobs]
         }
@@ -33,7 +33,10 @@ def get_one_job(job_id):
         return jsonify({'error': 'Not found'})
     return jsonify(
         {
-            'news': job.to_dict(only=('id', 'job', 'work_size', 'is_finished', 'leader.name'))
+            'job': job.to_dict(only=('id', 'job', 'work_size',
+                                     'start_date', 'end_date',
+                                     'collaborators', 'is_finished',
+                                     'team_leader', 'leader.name', 'leader.surname'))
         }
     )
 
