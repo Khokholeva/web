@@ -44,13 +44,13 @@ class LoginForm(FlaskForm):
 
 class JobForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    work_size = IntegerField("Work size")
-    start_date = StringField('Start date')
-    end_date = StringField('End date')
-    team_leader = IntegerField("Team leader", validators=[DataRequired()])
-    collaborators = StringField('Collaborators')
-    is_finished = BooleanField('Is finished')
-    submit = SubmitField('Submit')
+    work_size = IntegerField("Work size", validators=[DataRequired()])
+    start_date = StringField('Start date', validators=[DataRequired()])
+    end_date = StringField('End date', validators=[DataRequired()])
+    team_leader = IntegerField("Team leader id", validators=[DataRequired()])
+    collaborators = StringField('Collaborators', validators=[DataRequired()])
+    is_finished = BooleanField('Is finished', validators=[DataRequired()])
+    submit = SubmitField('Submit', validators=[DataRequired()])
 
 
 def main():

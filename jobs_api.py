@@ -43,18 +43,39 @@ def get_one_job(job_id):
 
 @blueprint.route('/api/jobs', methods=['POST'])
 def create_job():
+    session = db_session.create_session()
     if not request.json:
         return jsonify({'error': 'Empty request'})
     elif not all(key in request.json for key in
-                 ['job', 'work_size', 'team_leader', 'is_finished', 'collaborators']):
+                 ['job', 'work_size', 'team_leader', 'is_finished',
+                  'collaborators', 'start_date', 'end_date', ]):
         return jsonify({'error': 'Bad request'})
-    session = db_session.create_session()
+    elif 'id' in request.json:
+        print([user.id for user in session.query(User).all()])
+        if request.json['id'] in [user.id for user in session.query(User).all()]:
+            return jsonify({'error': 'Id already exists'})
+        else:
+            job = Jobs(
+                job=request.json['job'],
+                work_size=request.json['work_size'],
+                team_leader=request.json['team_leader'],
+                is_finished=request.json['is_finished'],
+                collaborators=request.json['collaborators'],
+                start_date=request.json['start_date'],
+                end_date=request.json['end_date'],
+                id=request.json['id']
+            )
+            session.add(job)
+            session.commit()
+            return jsonify({'success': 'OK'})
     job = Jobs(
         job=request.json['job'],
         work_size=request.json['work_size'],
         team_leader=request.json['team_leader'],
         is_finished=request.json['is_finished'],
-        collaborators=request.json['collaborators']
+        collaborators=request.json['collaborators'],
+        start_date=request.json['start_date'],
+        end_date=request.json['end_date']
     )
     session.add(job)
     session.commit()
