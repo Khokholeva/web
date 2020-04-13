@@ -1,5 +1,5 @@
 from data import db_session, __all_models
-from flask import Flask, url_for, request, render_template, redirect, make_response, jsonify
+from flask import Flask, url_for, request, render_template, redirect, make_response, jsonify, abort
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.fields.html5 import EmailField
@@ -142,6 +142,46 @@ def add_job():
         return redirect('/')
     return render_template('add_job.html', title='Add job',
                            form=form)
+
+
+@app.route('/jobs/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_job(id):
+    form = JobForm()
+    if request.method == "GET":
+        session = db_session.create_session()
+        if current_user.id == 1:
+            job = session.query(Jobs).filter(Jobs.id == id).first()
+        else:
+            job = session.query(Jobs).filter(Jobs.id == id,
+                                         current_user == Jobs.leader).first()
+        if job:
+            form.title.data = job.job
+            form.work_size.data = job.work_size
+            form.start_date.data = job.start_date
+            form.end_date.data = job.end_date
+            form.team_leader.data = job.team_leader
+            form.collaborators.data = job.collaborators
+            form.is_finished.data = job.is_finished
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        job = session.query(Jobs).filter(Jobs.id == id,
+                                          Jobs.leader == current_user).first()
+        if job:
+            job.job = form.title.data
+            job.work_size = form.work_size.data
+            job.start_date = form.start_date.data
+            job.end_date = form.end_date.data
+            job.team_leader = form.team_leader.data
+            job.collaborators = form.collaborators.data
+            job.is_finished = form.is_finished.data
+            session.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('add_job.html', title='Редактирование новости', form=form)
 
 
 @app.errorhandler(404)
