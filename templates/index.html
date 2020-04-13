@@ -26,6 +26,12 @@
         <th align="center" bgcolor="#ddaaaa">Is not finished</th>
         {% endif %}
     </tr>
+    <tr>
+        {% if current_user.is_authenticated and (current_user == elem.leader or current_user.id == 1) %}
+        <a href="/jobs/{{ elem.id }}" class="btn btn-warning">Изменить</a>
+        <a href="/jobs_delete/{{ elem.id }}" class="btn btn-danger">Удалить</a>
+        {% endif %}
+    </tr>
 </table>
 {% endfor %}
 {% endblock %}

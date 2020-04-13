@@ -154,7 +154,7 @@ def edit_job(id):
             job = session.query(Jobs).filter(Jobs.id == id).first()
         else:
             job = session.query(Jobs).filter(Jobs.id == id,
-                                         current_user == Jobs.leader).first()
+                                             current_user == Jobs.leader).first()
         if job:
             form.title.data = job.job
             form.work_size.data = job.work_size
@@ -168,7 +168,7 @@ def edit_job(id):
     if form.validate_on_submit():
         session = db_session.create_session()
         job = session.query(Jobs).filter(Jobs.id == id,
-                                          Jobs.leader == current_user).first()
+                                         Jobs.leader == current_user).first()
         if job:
             job.job = form.title.data
             job.work_size = form.work_size.data
@@ -182,6 +182,23 @@ def edit_job(id):
         else:
             abort(404)
     return render_template('add_job.html', title='Редактирование новости', form=form)
+
+
+@app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def news_delete(id):
+    session = db_session.create_session()
+    if current_user.id == 1:
+        job = session.query(Jobs).filter(Jobs.id == id).first()
+    else:
+        job = session.query(Jobs).filter(Jobs.id == id,
+                                         current_user == Jobs.leader).first()
+    if job:
+        session.delete(job)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/')
 
 
 @app.errorhandler(404)
