@@ -10,6 +10,8 @@ import jobs_api
 User = __all_models.users.User
 Jobs = __all_models.jobs.Jobs
 
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
@@ -56,6 +58,7 @@ class JobForm(FlaskForm):
 def main():
     db_session.global_init("db/Mars.sqlite")
     app.register_blueprint(jobs_api.blueprint)
+    session = db_session.create_session()
     app.run()
 
 

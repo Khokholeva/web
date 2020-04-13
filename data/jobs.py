@@ -25,3 +25,4 @@ class Jobs(SqlAlchemyBase, SerializerMixin):
 
     def __repr__(self):
         return "<Job> {} {}".format(self.id, self.job)
+
