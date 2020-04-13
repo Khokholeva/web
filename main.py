@@ -49,7 +49,7 @@ class JobForm(FlaskForm):
     end_date = StringField('End date', validators=[DataRequired()])
     team_leader = IntegerField("Team leader id", validators=[DataRequired()])
     collaborators = StringField('Collaborators', validators=[DataRequired()])
-    is_finished = BooleanField('Is finished', validators=[DataRequired()])
+    is_finished = BooleanField('Is finished')
     submit = SubmitField('Submit', validators=[DataRequired()])
 
 
@@ -129,7 +129,7 @@ def add_job():
     if form.validate_on_submit():
         session = db_session.create_session()
         job = Jobs()
-        job.title = form.title.data
+        job.job = form.title.data
         job.work_size = form.work_size.data
         job.start_date = form.start_date.data
         job.end_date = form.end_date.data
