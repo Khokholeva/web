@@ -10,8 +10,6 @@ import jobs_api
 User = __all_models.users.User
 Jobs = __all_models.jobs.Jobs
 
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
